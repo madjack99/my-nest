@@ -4,6 +4,11 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseArrayPipe,
+  ParseBoolPipe,
+  ParseFloatPipe,
+  ParseIntPipe,
+  ParseUUIDPipe,
   Query,
   Req,
   Res,
@@ -13,11 +18,8 @@ import type { Request, Response } from 'express';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  @HttpCode(HttpStatus.BAD_GATEWAY)
-  fetchReq() {
-    return 'This is string message';
+  @Get(':id')
+  getId(@Param('id', new ParseUUIDPipe({ version: '1' })) id: string) {
+    return id;
   }
 }
