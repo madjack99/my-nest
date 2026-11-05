@@ -14,27 +14,40 @@ import {
   Query,
   Req,
   Res,
+  SetMetadata,
+  UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service.js';
 import type { Request, Response } from 'express';
 import { UserService } from './services/user/user.service.js';
 import { UserDTO } from './UserDTO/user.dto.js';
+import { AuthGuard } from './guards/auth/auth.guard.js';
+import { RoleGuard } from './guards/role/role.guard.js';
+import { Roles } from './customDecorators/roles.decorator.js';
+import { Role } from './enum/roles.enum.js';
 
 interface TokenRequest extends Request {
   token?: string;
 }
 
-@Controller()
+@Controller('admin')
+@UseGuards(RoleGuard)
 export class AppController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  createUser(@Body() body: UserDTO) {
-    return `User created successfully`
+  @Get('user')
+  @Roles(Role.USER)
+  getUser(@Req() req: any) {
+    const data = req.user;
+    const { apiKey, ...userData } = data;
+    return `${data.name} data: ${JSON.stringify(userData, null, 4)}`;
   }
 
-  @Get()
-  getAllUsers(): UserDTO[] {
-    return this.userService.getAllUsers();
+  @Post('create')
+  @Roles(Role.ADMIN, Role.USER)
+  create(@Body() userData: any) {
+    this.userService.addUser(userData);
+
+    return 'User added successfully';
   }
 }
