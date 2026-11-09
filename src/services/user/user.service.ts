@@ -2,31 +2,38 @@ import { Injectable } from '@nestjs/common';
 import { UserDTO } from '../../UserDTO/user.dto.js';
 import { Role } from '../../enum/roles.enum.js';
 
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+}
+
 @Injectable()
 export class UserService {
-  private users = [
+  private users: User[] = [
     {
-      apiKey: 'userA101',
+      id: 1,
       name: 'UserA',
       email: 'userA@email.com',
-      roles: [Role.ADMIN],
+      password: 'secretKey1',
     },
     {
-      apiKey: 'userB102',
+      id: 2,
       name: 'UserB',
       email: 'userB@email.com',
-      roles: [Role.USER],
+      password: 'secretKey2',
     },
     {
-      apiKey: 'userC103',
+      id: 3,
       name: 'UserC',
       email: 'userC@email.com',
-      roles: [Role.USER],
+      password: 'secretKey3',
     },
   ];
 
-  getUsers(apiKey: string) {
-    return this.users.find((user) => user.apiKey === apiKey);
+  findOne(id: number) {
+    return this.users.find((user) => user.id === id);
   }
 
   addUser(user: any) {

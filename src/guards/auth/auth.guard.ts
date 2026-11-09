@@ -26,12 +26,12 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const req = context.switchToHttp().getRequest<UserRequest>();
     const apiKey = req.headers?.api_key as string;
-    const user = this.userService.getUsers(apiKey);
-    if (!user) {
-      throw new UnauthorizedException('Invalid api_key');
-    }
+    // const user = this.userService.getUsers(apiKey);
+    // if (!user) {
+    //   throw new UnauthorizedException('Invalid api_key');
+    // }
 
-    req.user = user;
+    // req.user = user;
 
     return true;
   }
